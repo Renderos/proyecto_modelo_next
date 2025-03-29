@@ -3,7 +3,6 @@ import User from "@/app/models/user";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
-import { log } from "console";
 
 const handler = NextAuth({
   providers: [
