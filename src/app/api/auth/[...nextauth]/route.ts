@@ -15,9 +15,7 @@ const handler = NextAuth({
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        console.log("conectando con credenciales");
         await connectDB();
-        console.log("conexion a db correcta");
         const userFound = await User.findOne({
           email: credentials?.email,
         }).select("+password");
