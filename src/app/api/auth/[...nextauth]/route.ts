@@ -3,6 +3,7 @@ import User from "@/app/models/user";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
+import { log } from "console";
 
 const handler = NextAuth({
   providers: [
@@ -14,7 +15,9 @@ const handler = NextAuth({
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
+        console.log("conectando con credenciales");
         await connectDB();
+        console.log("conexion a db correcta");
         const userFound = await User.findOne({
           email: credentials?.email,
         }).select("+password");
