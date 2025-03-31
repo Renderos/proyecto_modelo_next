@@ -7,10 +7,23 @@ import Swal from "sweetalert2";
 const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsLoading(true);
+
+    // Validación básica
+    if (!email || !password) {
+      Swal.fire({
+        icon: "error",
+        title: "Campos requeridos",
+        text: "Por favor complete todos los campos",
+      });
+      setIsLoading(false);
+      return;
+    }
 
     try {
       const res = await signIn("credentials", {
@@ -20,17 +33,19 @@ const LoginForm = () => {
       });
 
       if (res?.ok) {
-        Swal.fire({
+        await Swal.fire({
           icon: "success",
-          title: "Login Successful",
-          text: "Redirecting to home...",
+          title: "¡Bienvenido!",
+          text: "Inicio de sesión exitoso",
+          timer: 1500,
+          showConfirmButton: false,
         });
-        router.push("/home"); // return to home
+        router.push("/home");
       } else {
         Swal.fire({
           icon: "error",
-          title: "Login Failed",
-          text: res?.error || "Invalid credentials",
+          title: "Error",
+          text: res?.error || "Credenciales incorrectas",
         });
       }
     } catch (error) {
@@ -38,61 +53,92 @@ const LoginForm = () => {
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "Something went wrong. Please try again.",
+        text: "Ocurrió un error inesperado",
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-    <div className="h-[100vh] items-center flex justify-center px-5 lg:px-0">
-      <div className="max-w-screen-xl bg-gray-800/90 border border-gray-700 shadow sm:rounded-lg flex justify-center flex-1">
-        <div className="flex-1 bg-gray-900 text-center hidden md:flex">
-          <div
-            className="m-12 xl:m-16 w-full bg-contain bg-center bg-no-repeat"
-            style={{
-              backgroundImage: `url(bg.svg)`,
-            }}
-          ></div>
-        </div>
-        <div className="lg:w-1/2 xl:w-5/12 p-6 sm:p-12">
-          <div className="flex flex-col items-center">
+    <div className="min-h-screen flex items-center justify-center p-4">
+      <div className="w-full max-w-4xl bg-gray-800 rounded-xl shadow-2xl overflow-hidden border border-gray-700">
+        <div className="flex flex-col md:flex-row">
+          {/* Sección de imagen */}
+          <div className="hidden md:flex md:w-1/2 bg-gradient-to-br from-blue-600 to-blue-800 items-center justify-center p-12">
             <div className="text-center">
-              <h1 className="text-2xl xl:text-4xl font-extrabold text-white">
-                Welcome, Back!
-              </h1>
-              <p className="text-[12px] text-gray-400">
-                Please enter your email and password to log into your account
+              <div
+                className="w-full h-64 bg-contain bg-center bg-no-repeat opacity-90"
+                style={{
+                  backgroundImage: `url(login.svg)`,
+                }}
+              />
+              <h2 className="text-3xl font-bold text-white mt-8">
+                Bienvenido de vuelta
+              </h2>
+            </div>
+          </div>
+
+          {/* Sección del formulario */}
+          <div className="w-full md:w-1/2 py-10 px-6 sm:px-12">
+            <div className="text-center mb-10">
+              <h1 className="text-3xl font-bold text-white">Iniciar Sesión</h1>
+              <p className="text-gray-400 mt-2">
+                Ingresa tu correo y contraseña
               </p>
             </div>
-            <div className="w-full flex-1 mt-8">
-              <div className="mx-auto max-w-xs flex flex-col gap-4">
+
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"></div>
                 <input
-                  className="w-full px-5 py-3 rounded-lg font-medium bg-gray-700 border border-gray-600 placeholder-gray-400 text-sm text-white focus:outline-none focus:border-green-500 focus:bg-gray-800"
+                  className="w-full pl-10 pr-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   type="email"
                   name="email"
-                  placeholder="Email"
+                  placeholder="Correo electrónico"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  disabled={isLoading}
                 />
+              </div>
+
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"></div>
                 <input
-                  className="w-full px-5 py-3 rounded-lg font-medium bg-gray-700 border border-gray-600 placeholder-gray-400 text-sm text-white focus:outline-none focus:border-green-500 focus:bg-gray-800"
+                  className="w-full pl-10 pr-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   type="password"
                   name="password"
-                  placeholder="Password"
+                  placeholder="Contraseña"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  disabled={isLoading}
                 />
-                <button className="mt-5 tracking-wide font-semibold bg-green-600 text-gray-100 w-full py-4 rounded-lg hover:bg-green-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none">
-                  <span className="ml-3">Log In</span>
-                </button>
               </div>
+
+              <button
+                type="submit"
+                className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-lg font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-300 disabled:opacity-70 disabled:cursor-not-allowed"
+                disabled={isLoading}
+              >
+                {isLoading ? <>Procesando...</> : "Iniciar Sesión"}
+              </button>
+            </form>
+
+            <div className="mt-8 text-center">
+              <p className="text-gray-400">
+                ¿No tienes una cuenta?{" "}
+                <a
+                  href="/register"
+                  className="text-blue-500 hover:text-blue-400 font-medium"
+                >
+                  Regístrate
+                </a>
+              </p>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </form>
   );
 };
 
