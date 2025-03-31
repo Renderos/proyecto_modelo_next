@@ -32,6 +32,8 @@ const LoginForm = () => {
         redirect: false,
       });
 
+      console.log("Resultado de signIn:", res); // Agregado para depuración
+
       if (res?.ok) {
         await Swal.fire({
           icon: "success",
