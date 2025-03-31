@@ -18,7 +18,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning={true} data-qb-installed="true">
       <body>
         <div style={{
-        backgroundImage: "url('https://t3.ftcdn.net/jpg/05/93/52/12/360_F_593521259_FTBggkMSTck8OKcMhZe9KZUkXFuVB3FG.jpg')",
+        backgroundImage: "url('https://t3.ftcdn.net/jpg/05/url('https://img.freepik.com/foto-gratis/fondo-azul-degradado-lujo-abstracto-azul-oscuro-liso-banner-estudio-vineta-negra_1258-70937.jpg?t=st=1743379910~exp=1743383510~hmac=9e77e02e473d1dc1e469412a9603e790c1790c183c0ce3265da4e20fffcbd1e1&w=996')93/52/12/360_F_593521259_FTBggkMSTck8OKcMhZe9KZUkXFuVB3FG.jpg')",
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         minHeight: '100vh', 
