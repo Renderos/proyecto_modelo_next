@@ -1,3 +1,34 @@
+
+Integrantes 
+
+Carnet 
+ 
+<table>
+  <tr><td>Carlos Alberto Alfaro Espinoza</td><td>AE220430 </td></tr>
+</table>
+
+
+Carlos Alberto Alfaro Espinoza 
+
+
+
+Ronald Ernesto Renderos Ramos 
+
+RR150535 
+
+Devin Iván Mendoza Ortíz 
+
+MO190391 
+
+Douglas Eduardo Mejia Novoa 
+
+MN142088 
+
+Monica Raquel Iglesias Morales 
+
+IM200679 
+
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
