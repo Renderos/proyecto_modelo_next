@@ -15,7 +15,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning="true" data-qb-installed="true">
+    <html lang="en" suppressHydrationWarning={true} data-qb-installed="true">
       <body>
         <div style={{
         backgroundImage: "url('https://t3.ftcdn.net/jpg/05/93/52/12/360_F_593521259_FTBggkMSTck8OKcMhZe9KZUkXFuVB3FG.jpg')",
