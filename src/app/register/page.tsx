@@ -6,27 +6,43 @@ import Swal from "sweetalert2";
 
 const RegistrationForm = () => {
   const [role, setRole] = useState("TeamMember");
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsLoading(true);
+
+    const formData = new FormData(e.currentTarget);
+    const data = {
+      email: formData.get("email"),
+      password: formData.get("password"),
+      fullname: formData.get("fullname"),
+      role: formData.get("role"),
+    };
+
+    // Validación básica
+    if (!data.email || !data.password || !data.fullname) {
+      Swal.fire({
+        icon: "error",
+        title: "Campos requeridos",
+        text: "Por favor complete todos los campos obligatorios",
+      });
+      setIsLoading(false);
+      return;
+    }
 
     try {
-      const formData = new FormData(e.currentTarget);
-      const signupResponse = await axios.post("/api/auth/signup", {
-        email: formData.get("email"),
-        password: formData.get("password"),
-        fullname: formData.get("fullname"),
-        role: formData.get("role"),
-      });
+      const signupResponse = await axios.post("/api/auth/signup", data);
 
-      Swal.fire({
+      await Swal.fire({
         icon: "success",
-        title: "Success",
+        title: "¡Registro exitoso!",
         text: signupResponse.data.message,
+        timer: 1500,
+        showConfirmButton: false,
       });
 
-      // return to dashboard after user's registration
       router.push("/dashboard");
     } catch (error) {
       console.error(error);
@@ -34,82 +50,133 @@ const RegistrationForm = () => {
         Swal.fire({
           icon: "error",
           title: "Error",
-          text: error.response?.data.message || "Unknown error",
+          text:
+            error.response?.data.message ||
+            "Ocurrió un error durante el registro",
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Ocurrió un error inesperado",
         });
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div className="h-[100vh] items-center flex justify-center px-5 lg:px-0">
-        <div className="max-w-screen-xl bg-white border shadow sm:rounded-lg flex justify-center flex-1">
-          <div className="flex-1 bg-green-900 text-center hidden md:flex">
-            <div
-              className="m-12 xl:m-16 w-full bg-contain bg-center bg-no-repeat"
-              style={{
-                backgroundImage: `url(bg.svg)`,
-              }}
-            ></div>
+    <div className="min-h-screen flex items-center justify-center p-4">
+      <div className="w-full max-w-4xl bg-gray-800 rounded-xl shadow-2xl overflow-hidden border border-gray-700">
+        <div className="flex flex-col md:flex-row">
+          {/* Sección de imagen */}
+          <div className="hidden md:flex md:w-1/2 bg-gradient-to-br from-blue-600 to-blue-800 items-center justify-center p-12">
+            <div className="text-center">
+              <div
+                className="w-full h-64 bg-contain bg-center bg-no-repeat opacity-90"
+                style={{ backgroundImage: `url(login.svg)` }}
+              />
+              <h2 className="text-3xl font-bold text-white mt-8">
+                Crear nueva cuenta
+              </h2>
+            </div>
           </div>
-          <div className="lg:w-1/2 xl:w-5/12 p-6 sm:p-12">
-            <div className="flex flex-col items-center">
-              <div className="text-center">
-                <h1 className="text-2xl xl:text-4xl font-extrabold text-green-900">
-                  Create users
-                </h1>
-                <p className="text-[12px] text-gray-500">
-                  Hey, enter the details to create an account for a user
-                </p>
+
+          {/* Sección del formulario */}
+          <div className="w-full md:w-1/2 py-10 px-6 sm:px-12">
+            <div className="text-center mb-10">
+              <h1 className="text-3xl font-bold text-white">
+                Registro de Usuario
+              </h1>
+              <p className="text-gray-400 mt-2">
+                Ingresa los campos del nuevo usuario
+              </p>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="relative">
+                <input
+                  className="w-full pl-10 pr-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  type="text"
+                  name="fullname"
+                  placeholder="Nombre completo"
+                  required
+                  disabled={isLoading}
+                />
               </div>
-              <div className="w-full flex-1 mt-8">
-                <div className="mx-auto max-w-xs flex flex-col gap-4">
-                  <input
-                    className="w-full px-5 py-3 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-green-400 focus:bg-white"
-                    type="text"
-                    name="fullname"
-                    placeholder="Full name"
-                  />
-                  <input
-                    className="w-full px-5 py-3 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-green-400 focus:bg-white"
-                    type="email"
-                    name="email"
-                    placeholder="Mail"
-                  />
-                  <select
-                    className="w-full px-5 py-3 rounded-lg font-medium bg-gray-100 border border-gray-200 text-sm focus:outline-none focus:border-green-400 focus:bg-white"
-                    value={role}
-                    name="role"
-                    onChange={(e) => setRole(e.target.value)}
-                  >
-                    <option value="TeamMember">Team Member</option>
-                    <option value="ProjectManager">Project Manager</option>
-                    <option value="Admin">Admin</option>
-                  </select>
-                  <input
-                    className="w-full px-5 py-3 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-green-400 focus:bg-white"
-                    type="password"
-                    name="password"
-                    placeholder="Password"
-                  />
-                  <button className="mt-5 tracking-wide font-semibold bg-green-900 text-gray-100 w-full py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none">
-                    <span className="ml-3">Sign Up</span>
-                  </button>
-                  <p className="mt-6 text-xs text-gray-600 text-center">
-                    Already have an account?{" "}
-                    <a href="">
-                      <span className="text-green-900 font-semibold">
-                        Sign in
-                      </span>
-                    </a>
-                  </p>
+
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"></div>
+                <input
+                  className="w-full pl-10 pr-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  type="email"
+                  name="email"
+                  placeholder="Correo electrónico"
+                  required
+                  disabled={isLoading}
+                />
+              </div>
+
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <span className="text-gray-400"></span>
                 </div>
+                <select
+                  className="w-full pl-10 pr-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none"
+                  value={role}
+                  name="role"
+                  onChange={(e) => setRole(e.target.value)}
+                  disabled={isLoading}
+                >
+                  <option value="TeamMember">Miembro del Equipo</option>
+                  <option value="ProjectManager">Gerente de Proyecto</option>
+                  <option value="Admin">Administrador</option>
+                </select>
               </div>
+
+              <div className="relative">
+                <input
+                  className="w-full pl-10 pr-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  type="password"
+                  name="password"
+                  placeholder="Contraseña"
+                  required
+                  disabled={isLoading}
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-lg font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-300 disabled:opacity-70 disabled:cursor-not-allowed"
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <>
+                    <span className="animate-spin mr-2">🌀</span>
+                    Registrando...
+                  </>
+                ) : (
+                  "Registrar Usuario"
+                )}
+              </button>
+            </form>
+
+            <div className="mt-8 text-center">
+              <p className="text-gray-400">
+                ¿Ya tienes una cuenta?{" "}
+                <a
+                  href="/login"
+                  className="text-blue-500 hover:text-blue-400 font-medium"
+                >
+                  Iniciar Sesión
+                </a>
+              </p>
             </div>
           </div>
         </div>
       </div>
-    </form>
+    </div>
   );
 };
 
