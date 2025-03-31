@@ -271,7 +271,7 @@ const ProjectManagerHome = () => {
                 setName(project.name);
                 setDescription(project.description);
               }}
-              className="bg-yellow-500 text-white px-4 py-2 rounded mt-2 ml-2"
+              className="bg-green-500 text-white px-4 py-2 rounded mt-2 ml-2"
             >
               Editar Proyecto
             </button>
@@ -345,7 +345,7 @@ const ProjectManagerHome = () => {
                         onClick={() =>
                           handleEditTask(project._id as string, index)
                         }
-                        className="bg-yellow-500 text-white px-4 py-2 rounded mt-2 mr-2"
+                        className="bg-green-500 text-white px-4 py-2 rounded mt-2 mr-2"
                       >
                         Editar Tarea
                       </button>
