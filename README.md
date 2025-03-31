@@ -8,9 +8,6 @@ Carnet
 </table>
 
 
-Carlos Alberto Alfaro Espinoza 
-
-
 
 Ronald Ernesto Renderos Ramos 
 
