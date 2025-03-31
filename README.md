@@ -1,4 +1,7 @@
-
+<table>
+ <tr><th>Integrantes</th><th>Carnet</th></tr>
+ <tr><td>Carlos Alberto Alfaro Espinoza </td><td>AE220430</td></tr>
+</table>
 Integrantes 
 
 Carnet 
