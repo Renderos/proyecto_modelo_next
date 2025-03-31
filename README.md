@@ -37,5 +37,4 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 ## Link Project
 
-https://management-system-manuelbmaa-manuels-projects-f39b4c36.vercel.app/
 # proyecto_modelo_next
